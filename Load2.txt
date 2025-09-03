@@ -1,0 +1,32 @@
+IF NOT EXISTS (SELECT * FROM sys.external_file_formats WHERE name = 'SynapseDelimitedTextFormat')
+	CREATE EXTERNAL FILE FORMAT [SynapseDelimitedTextFormat]
+	WITH ( FORMAT_TYPE = DELIMITEDTEXT ,
+	       FORMAT_OPTIONS (
+			 FIELD_TERMINATOR = ',',
+			 USE_TYPE_DEFAULT = FALSE
+			))
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.external_data_sources WHERE name = ''abfss://raw@dlsg2a_dfs_core_windows_net')
+	CREATE EXTERNAL DATA SOURCE ['abfss://raw@dlsg2a_dfs_core_windows_net]
+	WITH (
+		LOCATION = 'abfss://raw@dlsg2a.dfs.core.windows.net'
+	)
+GO
+
+CREATE EXTERNAL TABLE dbo.payment_table (
+	[payment_id] nvarchar(4000),
+	[date] nvarchar(4000),
+	[amount] nvarchar(4000),
+	[rider_id] nvarchar(4000)
+	)
+	WITH (
+	LOCATION = 'public.payment.txt',
+	DATA_SOURCE = ['abfss://raw@dlsg2a_dfs_core_windows_net],
+	FILE_FORMAT = [SynapseDelimitedTextFormat]
+	)
+GO
+
+
+SELECT TOP 100 * FROM dbo.payment_table
+GO
