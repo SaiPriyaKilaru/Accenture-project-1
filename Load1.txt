@@ -7,8 +7,8 @@ IF NOT EXISTS (SELECT * FROM sys.external_file_formats WHERE name = 'SynapseDeli
 			))
 GO
 
-IF NOT EXISTS (SELECT * FROM sys.external_data_sources WHERE name = 'abfss://raw@dlsg2a.dfs.core.windows.net')
-	CREATE EXTERNAL DATA SOURCE [abfss://raw@dlsg2a.dfs.core.windows.net_dfs]
+IF NOT EXISTS (SELECT * FROM sys.external_data_sources WHERE name = 'abfss://raw@dlsg2a_dfs_core_windows_net')
+	CREATE EXTERNAL DATA SOURCE [abfss://raw@dlsg2a_dfs_core_windows_net]
 	WITH (
 		LOCATION = 'abfss://raw@dlsg2a.dfs.core.windows.net'
 	)
@@ -25,7 +25,7 @@ CREATE EXTERNAL TABLE dbo.trip_table (
 	)
 	WITH (
 	LOCATION = 'public.trip.txt',
-	DATA_SOURCE = [filebikesharestorage_accbikesharestorage_dfs_core_windows_net],
+	DATA_SOURCE = [abfss://raw@dlsg2a_dfs_core_windows_net],
 	FILE_FORMAT = [SynapseDelimitedTextFormat]
 	)
 GO
@@ -33,3 +33,4 @@ GO
 
 SELECT TOP 100 * FROM dbo.trip_table
 GO
+
